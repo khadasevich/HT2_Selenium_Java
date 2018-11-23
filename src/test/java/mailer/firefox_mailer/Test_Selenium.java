@@ -7,6 +7,7 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import java.util.concurrent.TimeUnit;
@@ -27,17 +28,28 @@ public class Test_Selenium {
     private static final String CLOSE_AND_SAVE_DRAFT =
             "//*[@id=\"mail-app-component\"]/div/div/div[1]/div[1]/span/button";
     private static final String OPEN_DRAFT =
-            "//*[@id=\"app\"]/div[1]/div/div[1]/nav/div/div[3]/div[1]/ul/li[4]/div/a/span[1]";
+            "/html/body/div[1]/div/div[1]/div/div[1]/div/div[1]/nav/div/div[3]/div[1]/ul/li[4]/div";
     private static final String OPEN_CREATED_DRAFT_XPATH =
-            "//*[@id=\"mail-app-component\"]/div/div/div[2]/div/div[2]/div/div/div[2]/ul[1]/li[1]/a/div[3]/div[1]/div[2]/div";
+            "/html/body/div[1]/div/div[1]/div/div[1]/div/div[2]/div[1]" +
+                    "/div[2]/div/div[2]/div/div[2]/div/div/div[2]/ul[1]/li[2]/a";
     private static final String TO_INPUT_FIELD = "//*[@id=\"message-to-field\"]";
     private static final String SEND_BUTTON = "//*[@id=\"mail-app-component\"]/div/div/div[2]/div[2]/div/button/span";
-
+    private static final String PROFILE_BUTTON = "/html/body/header/div/div[3]/div[1]/div/label/img";
+    private static final String PROFILE_TEXT = "/html/body/header/div/div[3]/div[1]/div/div/div/ul/li/div/span[1]";
+    private static final String SENT_BOX =
+            "/html/body/div/div/div[1]/div/div[1]/div/div[1]/nav/div/div[3]/div[1]/ul/li[5]/div";
+    private static final String SENT_MESSAGE =
+            "/html/body/div[1]/div/div[1]/div/div[1]/div/div[2]/div[1]/div[2]" +
+                    "/div/div[2]/div/div[2]/div/div/div[2]/ul[1]/li[2]/a";
+    private static final String EMAIL_OF_SENT_MESSAGE =
+            "/html/body/div[1]/div/div[1]/div/div[1]/div/div[2]/div[1]/div[2]" +
+                    "/div[2]/div[2]/ul/li/div/header/div[2]/div[2]/span[2]/span/span";
     private static final String EMAIL = "khadasevich.aleksey@gmail.com";
     private static final String SUBJECT = "Testing Selenium";
     private static final String DESCRIPTION_TEXT = "Wake up, Neo. The matrix has you";
     private static final String USERNAME = "testselenium42@yahoo.com";
     private static final String PASSWORD = "123456Qww";
+    private static final String LAST_FIRST_NAME = "Test Selenium";
 
     private WebDriver driver;
     private WebDriverWait wait;
@@ -46,11 +58,10 @@ public class Test_Selenium {
     public void startBrowser() {
         driver = new FirefoxDriver();
         wait = new WebDriverWait(driver, 20);
-        driver.manage().timeouts().implicitlyWait(20,TimeUnit.SECONDS);
     }
 
-    @BeforeClass(dependsOnMethods = "startBrowser", description = "Add wait and maximize window")
-    public void addWaiting() {
+    @BeforeClass(dependsOnMethods = "startBrowser", description = "Maximize window and check that button appeared")
+    public void checkSignin() {
 //      Open browser on full screen
         driver.manage().window().maximize();
 //      Let's visit my mailbox
@@ -59,23 +70,68 @@ public class Test_Selenium {
         wait.until(ExpectedConditions.elementToBeClickable(driver.findElement(By.xpath(SIGN_IN_XPATH))));
     }
 
-    @Test(description = "!!!!!!!!!!!!")
-    public void loginToGithub() {
-        // !!!!!!!!!!!!!
+    @Test(description = "Checks successful login, creation of draft message and sending")
+    public void testingYahooMailer() {
+//      Run methods to login
         doLogin(USERNAME, PASSWORD);
+//      Let's check success of the login
+        WebElement profile_button = driver.findElement(By.xpath(PROFILE_BUTTON));
+        profile_button.click();
+//      Let's check that username is on the page
+        WebElement text_on_profile = driver.findElement(By.xpath(PROFILE_TEXT));
+//      Get the message elements text
+        String messageText = text_on_profile.getText();
+//      Checking that first and last name are on the page
+        Assert.assertEquals(LAST_FIRST_NAME, messageText);
+//      Let's create draft message
         createDraft(SUBJECT, DESCRIPTION_TEXT);
+//      Setting delay to draft message appeared in the draft box
+//      Note: In my case internal selenium implicit and explicit waits didn't help that's why I've used java delay
+        try {
+            TimeUnit.SECONDS.sleep(20);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+//      Let's check draft box
+        WebElement draft_button = driver.findElement(By.xpath(OPEN_DRAFT));
+        draft_button.click();
+//      Let's open created draft message and check parameters
+        WebElement draft_message = driver.findElement(By.xpath(OPEN_CREATED_DRAFT_XPATH));
+        draft_message.click();
+        WebElement text_subject = driver.findElement(By.xpath(SUBJECT_FIELD_XPATH));
+        String subject = text_subject.getAttribute("value");
+//      Checking subject
+        Assert.assertEquals(SUBJECT, subject);
+//        WebElement text_body = driver.findElement(By.xpath(TEXTBOX_FIELD));
+//        String body_message = text_body.getAttribute("value");
+//      Checking body
+//        Assert.assertEquals(DESCRIPTION_TEXT, body_message);
+
+
+//      Let's send draft and check draft box
         sendDraft(EMAIL);
+        draft_button.click();
+        Assert.assertTrue(isElementPresent(By.xpath(OPEN_CREATED_DRAFT_XPATH)), "Draft message was found");
+//      Let's check sent box
+        WebElement sent_box = driver.findElement(By.xpath(SENT_BOX));
+        sent_box.click();
+        WebElement sent_message = driver.findElement(By.xpath(SENT_MESSAGE));
+        sent_message.click();
+//      Let's check that sent message has email
+        WebElement email_path = driver.findElement(By.xpath(EMAIL_OF_SENT_MESSAGE));
+        String email_path_string = email_path.getText();
+        Assert.assertEquals(EMAIL, email_path_string);
+    }
 
-//        WebElement draft = driver.findElement(By.xpath("//*[@id=\"app\"]/div[1]/div/div[1]/nav/div/div[3]/div[1]/ul/li[4]/div/a/span[2]/span)"));
-//        System.out.println("Text: " + draft.getText());
-        // !!!!!!!!!!!
-        Assert.assertTrue(isElementPresent(By.xpath("//*[@id=\"yui_3_18_0_3_1542941505979_578\"]")), "Some custom text");
-
+    @AfterClass(description = "Stop Browser")
+    public void stopBrowser() {
+//      Closes browser after test
+        driver.quit();
     }
 
     private boolean isElementPresent(By by) {
-        // Custom implementation for is ElementPresent
-        return !driver.findElements(by).isEmpty();
+//  Checking absence of the element
+        return driver.findElements(by).isEmpty();
     }
 
     private void doLogin(String username, String password) {
@@ -123,13 +179,8 @@ public class Test_Selenium {
 //      Closing and saving as graft
         WebElement cross_button = driver.findElement(By.xpath(CLOSE_AND_SAVE_DRAFT));
         cross_button.click();
-        try {
-            TimeUnit.SECONDS.sleep(20);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
     }
+
     private void sendDraft(String email) {
 //  Method which sends draft
 //      Let's go to the Dreaft
