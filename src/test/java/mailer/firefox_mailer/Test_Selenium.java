@@ -21,9 +21,17 @@ public class Test_Selenium {
     private static final String SIGN_IN_BUTTON = "login-signin";
     private static final String OPEN_EMAIL_BUTTON = "uh-mail-link";
     private static final String COMPOSE_BUTTON_XPATH = "//*[@id=\"app\"]/div[1]/div/div[1]/nav/div/div[1]/a";
-    private static final String SUBJECT_FIELD_XPATH = "//*[@id=\"mail-app-component\"]/div/div/div[1]/div[3]/div/div/input";
+    private static final String SUBJECT_FIELD_XPATH =
+            "//*[@id=\"mail-app-component\"]/div/div/div[1]/div[3]/div/div/input";
     private static final String TEXTBOX_FIELD = "//*[@id=\"editor-container\"]/div[1]";
-    private static final String CLOSE_AND_SAVE_DRAFT = "//*[@id=\"mail-app-component\"]/div/div/div[1]/div[1]/span/button";
+    private static final String CLOSE_AND_SAVE_DRAFT =
+            "//*[@id=\"mail-app-component\"]/div/div/div[1]/div[1]/span/button";
+    private static final String OPEN_DRAFT =
+            "//*[@id=\"app\"]/div[1]/div/div[1]/nav/div/div[3]/div[1]/ul/li[4]/div/a/span[1]";
+    private static final String OPEN_CREATED_DRAFT_XPATH =
+            "//*[@id=\"mail-app-component\"]/div/div/div[2]/div/div[2]/div/div/div[2]/ul[1]/li[1]/a/div[3]/div[1]/div[2]/div";
+    private static final String TO_INPUT_FIELD = "//*[@id=\"message-to-field\"]";
+    private static final String SEND_BUTTON = "//*[@id=\"mail-app-component\"]/div/div/div[2]/div[2]/div/button/span";
 
     private static final String EMAIL = "khadasevich.aleksey@gmail.com";
     private static final String SUBJECT = "Testing Selenium";
@@ -38,6 +46,7 @@ public class Test_Selenium {
     public void startBrowser() {
         driver = new FirefoxDriver();
         wait = new WebDriverWait(driver, 20);
+        driver.manage().timeouts().implicitlyWait(20,TimeUnit.SECONDS);
     }
 
     @BeforeClass(dependsOnMethods = "startBrowser", description = "Add wait and maximize window")
@@ -57,8 +66,11 @@ public class Test_Selenium {
         createDraft(SUBJECT, DESCRIPTION_TEXT);
         sendDraft(EMAIL);
 
+//        WebElement draft = driver.findElement(By.xpath("//*[@id=\"app\"]/div[1]/div/div[1]/nav/div/div[3]/div[1]/ul/li[4]/div/a/span[2]/span)"));
+//        System.out.println("Text: " + draft.getText());
         // !!!!!!!!!!!
         Assert.assertTrue(isElementPresent(By.xpath("//*[@id=\"yui_3_18_0_3_1542941505979_578\"]")), "Some custom text");
+
     }
 
     private boolean isElementPresent(By by) {
@@ -94,7 +106,6 @@ public class Test_Selenium {
 //      Opening of the mailbox
         WebElement mail_button = driver.findElement(By.id(OPEN_EMAIL_BUTTON));
         mail_button.click();
-        driver.manage().timeouts().implicitlyWait(10,TimeUnit.SECONDS);
     }
     private void createDraft(String subject, String text) {
 //      Method which creates new draft
@@ -112,11 +123,29 @@ public class Test_Selenium {
 //      Closing and saving as graft
         WebElement cross_button = driver.findElement(By.xpath(CLOSE_AND_SAVE_DRAFT));
         cross_button.click();
-        driver.manage().timeouts().implicitlyWait(10,TimeUnit.SECONDS);
+        try {
+            TimeUnit.SECONDS.sleep(20);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
     }
     private void sendDraft(String email) {
 //  Method which sends draft
+//      Let's go to the Dreaft
+        WebElement drafts_open = driver.findElement(By.xpath(OPEN_DRAFT));
+        drafts_open.click();
+//      Let's open created draft
+        wait.until(ExpectedConditions.presenceOfElementLocated((By.xpath(OPEN_CREATED_DRAFT_XPATH))));
+        WebElement open_created_draft = driver.findElement(By.xpath(OPEN_CREATED_DRAFT_XPATH));
+        open_created_draft.click();
+//      Let's input email
+        wait.until(ExpectedConditions.presenceOfElementLocated((By.xpath(TO_INPUT_FIELD))));
+        WebElement fill_email = driver.findElement(By.xpath(TO_INPUT_FIELD));
+        fill_email.sendKeys(email);
+//      Let's send our email
+        WebElement send_button = driver.findElement(By.xpath(SEND_BUTTON));
+        send_button.click();
     }
 }
 
