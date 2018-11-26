@@ -102,6 +102,9 @@ public class Test_Selenium {
         String subject = text_subject.getAttribute("value");
 //      Checking subject
         Assert.assertEquals(SUBJECT, subject);
+
+
+        //        Checking of the body of the message was skipped because I didn't find proper way to do it
 //        WebElement text_body = driver.findElement(By.xpath(TEXTBOX_FIELD));
 //        String body_message = text_body.getAttribute("value");
 //      Checking body
@@ -117,7 +120,7 @@ public class Test_Selenium {
         sent_box.click();
         WebElement sent_message = driver.findElement(By.xpath(SENT_MESSAGE));
         sent_message.click();
-//      Let's check that sent message has email
+//      Let's check that sent message is in the sent box and has right email
         WebElement email_path = driver.findElement(By.xpath(EMAIL_OF_SENT_MESSAGE));
         String email_path_string = email_path.getText();
         Assert.assertEquals(EMAIL, email_path_string);
