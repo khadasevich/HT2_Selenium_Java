@@ -9,7 +9,6 @@ Create a new mail (fill addressee, subject and body fields).
 Save the mail as a draft.
 Verify, that the mail presents in ‘Drafts’ folder.
 Verify the draft content (addressee, subject and body – should be the same as in 3).
-*Note:* Check of the body wasn't implemented
 Send the mail.
 Verify, that the mail disappeared from ‘Drafts’ folder.
 Verify, that the mail is in ‘Sent’ folder.
