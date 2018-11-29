@@ -21,29 +21,20 @@ public class Test_Selenium {
     private static final String PASSWORD_FIELD_ID = "login-passwd";
     private static final String SIGN_IN_BUTTON = "login-signin";
     private static final String OPEN_EMAIL_BUTTON = "uh-mail-link";
-    private static final String COMPOSE_BUTTON_XPATH = "//*[@id=\"app\"]/div[1]/div/div[1]/nav/div/div[1]/a";
-    private static final String SUBJECT_FIELD_XPATH =
-            "//*[@id=\"mail-app-component\"]/div/div/div[1]/div[3]/div/div/input";
-    private static final String TEXTBOX_FIELD = "//*[@id=\"editor-container\"]/div[1]";
-    private static final String CLOSE_AND_SAVE_DRAFT =
-            "//*[@id=\"mail-app-component\"]/div/div/div[1]/div[1]/span/button";
-    private static final String OPEN_DRAFT =
-            "/html/body/div[1]/div/div[1]/div/div[1]/div/div[1]/nav/div/div[3]/div[1]/ul/li[4]/div";
-    private static final String OPEN_CREATED_DRAFT_XPATH =
-            "/html/body/div[1]/div/div[1]/div/div[1]/div/div[2]/div[1]" +
-                    "/div[2]/div/div[2]/div/div[2]/div/div/div[2]/ul[1]/li[2]/a";
-    private static final String TO_INPUT_FIELD = "//*[@id=\"message-to-field\"]";
-    private static final String SEND_BUTTON = "//*[@id=\"mail-app-component\"]/div/div/div[2]/div[2]/div/button/span";
-    private static final String PROFILE_BUTTON = "/html/body/header/div/div[3]/div[1]/div/label/img";
-    private static final String PROFILE_TEXT = "/html/body/header/div/div[3]/div[1]/div/div/div/ul/li/div/span[1]";
-    private static final String SENT_BOX =
-            "/html/body/div/div/div[1]/div/div[1]/div/div[1]/nav/div/div[3]/div[1]/ul/li[5]/div";
-    private static final String SENT_MESSAGE =
-            "/html/body/div[1]/div/div[1]/div/div[1]/div/div[2]/div[1]/div[2]" +
-                    "/div/div[2]/div/div[2]/div/div/div[2]/ul[1]/li[2]/a";
-    private static final String EMAIL_OF_SENT_MESSAGE =
-            "/html/body/div[1]/div/div[1]/div/div[1]/div/div[2]/div[1]/div[2]" +
-                    "/div[2]/div[2]/ul/li/div/header/div[2]/div[2]/span[2]/span/span";
+    private static final String COMPOSE_BUTTON_XPATH = "//*[text()='Compose']";
+    private static final String SUBJECT_FIELD_XPATH = "//*[@data-test-id='compose-subject']";
+    private static final String TEXTBOX_FIELD = "//*[@id='editor-container']/div[1]";
+    private static final String CLOSE_AND_SAVE_DRAFT = "//*[@data-test-id='icon-btn-close']";
+    private static final String OPEN_DRAFT = "//*[@data-test-folder-name='Draft']";
+    private static final String OPEN_CREATED_DRAFT_XPATH =  "//*[@title='testselenium42@yahoo.com']";
+    private static final String TO_INPUT_FIELD = "//*[@id='message-to-field']";
+    private static final String SEND_BUTTON = "//*[@data-test-id='compose-send-button']";
+    private static final String PROFILE_BUTTON = "//*[@alt='Profile image']";
+    private static final String PROFILE_TEXT = "//*[text()='Test Selenium']";
+    private static final String SENT_BOX = "//*[@data-test-folder-name='Sent']";
+    private static final String SENT_MESSAGE = "//*[@title='khadasevich.aleksey@gmail.com']";
+    private static final String EMAIL_OF_SENT_MESSAGE = "//*[@data-test-id='message-to']";
+    private static final String TEXTBOX_DESCRIPTION = "//*[text()='Wake up, Neo. The matrix has you']";
     private static final String EMAIL = "khadasevich.aleksey@gmail.com";
     private static final String SUBJECT = "Testing Selenium";
     private static final String DESCRIPTION_TEXT = "Wake up, Neo. The matrix has you";
@@ -102,15 +93,12 @@ public class Test_Selenium {
         String subject = text_subject.getAttribute("value");
 //      Checking subject
         Assert.assertEquals(SUBJECT, subject);
-
-
-        //        Checking of the body of the message was skipped because I didn't find proper way to do it
-//        WebElement text_body = driver.findElement(By.xpath(TEXTBOX_FIELD));
+//        Checking of the body of the message
+        WebElement text_body = driver.findElement(By.xpath(TEXTBOX_DESCRIPTION));
 //        String body_message = text_body.getAttribute("value");
+        String body_message = text_body.getText();
 //      Checking body
-//        Assert.assertEquals(DESCRIPTION_TEXT, body_message);
-
-
+        Assert.assertEquals(DESCRIPTION_TEXT, body_message);
 //      Let's send draft and check draft box
         sendDraft(EMAIL);
         draft_button.click();
@@ -186,7 +174,7 @@ public class Test_Selenium {
 
     private void sendDraft(String email) {
 //  Method which sends draft
-//      Let's go to the Dreaft
+//      Let's go to the Draft
         WebElement drafts_open = driver.findElement(By.xpath(OPEN_DRAFT));
         drafts_open.click();
 //      Let's open created draft
