@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit;
 
 public class Test_Selenium {
 
-    private static final String YAHOO_URL = "https://www.yahoo.com/";
+//    private static final String YAHOO_URL = "https://www.yahoo.com/";
     private static final String SIGN_IN_XPATH = "//*[@id=\"uh-signin\"]";
     private static final String USERNAME_FIELD_ID = "login-username";
     private static final String PASSWORD_FIELD_ID = "login-passwd";
@@ -49,20 +49,25 @@ public class Test_Selenium {
     public void startBrowser() {
         driver = new FirefoxDriver();
         wait = new WebDriverWait(driver, 20);
-    }
-
-    @BeforeClass(dependsOnMethods = "startBrowser", description = "Maximize window and check that button appeared")
-    public void checkSignin() {
+        driver.manage().deleteAllCookies();
 //      Open browser on full screen
         driver.manage().window().maximize();
-//      Let's visit my mailbox
-        driver.get(YAHOO_URL);
-//      Let's wait till Sign in button appears
-        wait.until(ExpectedConditions.elementToBeClickable(driver.findElement(By.xpath(SIGN_IN_XPATH))));
     }
+
+//    @BeforeClass(dependsOnMethods = "startBrowser", description = "Maximize window and check that button appeared")
+//    public void checkSignin() {
+//      Open browser on full screen
+//        driver.manage().window().maximize();
+//      Let's visit my mailbox
+//        driver.get(YAHOO_URL);
+//      Let's wait till Sign in button appears
+//        wait.until(ExpectedConditions.elementToBeClickable(driver.findElement(By.xpath(SIGN_IN_XPATH))));
+//    }
 
     @Test(description = "Checks successful login, creation of draft message and sending")
     public void testingYahooMailer() {
+        YahooMainPage yahooMainPage = new YahooMainPage();
+        yahooMainPage.openMainPage(driver);
 //      Run methods to login
         doLogin(USERNAME, PASSWORD);
 //      Let's check success of the login
