@@ -14,7 +14,6 @@ public class YahooMainPage extends YahooAbstractClass {
     }
 
     private static final String YAHOO_URL = "https://www.yahoo.com/";
-//    private static final String SIGN_IN_XPATH = "//*[@id=\"uh-signin\"]";
 
     @FindBy (xpath = "//*[@id=\"uh-signin\"]")
     WebElement signinBtn;
@@ -23,7 +22,9 @@ public class YahooMainPage extends YahooAbstractClass {
 //      Let's open Yahoo main page
         driver.get(YAHOO_URL);
 //      Let's wait till Sign in button appears
-        new WebDriverWait (driver, 10).until(ExpectedConditions.elementToBeClickable(signinBtn));
+//        new WebDriverWait (driver, 10).until(ExpectedConditions.elementToBeClickable(signinBtn));
+//        waitClickability(signinBtn);
+        click(signinBtn);
         return this;
     }
 }
