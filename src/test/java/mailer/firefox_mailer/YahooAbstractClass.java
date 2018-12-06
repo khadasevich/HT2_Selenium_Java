@@ -1,42 +1,43 @@
 package mailer.firefox_mailer;
 
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+
 public class YahooAbstractClass {
 
     protected WebDriver driver;
-    protected WebDriverWait wait;
+
 
     public YahooAbstractClass(WebDriver driver) {
         this.driver = driver;
         PageFactory.initElements(this.driver, this);
     }
 
+    public void waitClickability(WebElement element) {
 //  Basic waiting method
-//    public void waitClickability(WebElement element) {
-//        wait.until(ExpectedConditions.(element));
-//    }
+        new WebDriverWait (driver, 10).until(ExpectedConditions.elementToBeClickable(element));
+    }
 
-//  Basic click method
-//    public void click (By elementBy) {
-//        waitVisibility(elementBy);
-//        driver.findElement(elementBy).click();
-//    }
-
-//  Basic click method
     public void click (WebElement element) {
+//  Basic click method
+        waitClickability(element);
         element.click();
     }
 
+    public void writeText(WebElement element, String text) {
 //  Basic write text method
-//    public void writeText (By elementBy, String text) {
-//        waitVisibility(elementBy);
-//        driver.findElement(elementBy).sendKeys(text);
-//    }
+        waitClickability(element);
+        element.sendKeys(text);
+    }
+
+    public void submitText(WebElement element) {
+//  Basic submitting method
+        waitClickability(element);
+        element.submit();
+    }
 
 }
