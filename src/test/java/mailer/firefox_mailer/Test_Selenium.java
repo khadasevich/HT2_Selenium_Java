@@ -66,8 +66,9 @@ public class Test_Selenium {
 
     @Test(description = "Checks successful login, creation of draft message and sending")
     public void testingYahooMailer() {
-        YahooMainPage yahooMainPage = new YahooMainPage();
-        yahooMainPage.openMainPage(driver);
+//        YahooMainPage yahooMainPage = new YahooMainPage();
+//        yahooMainPage.openMainPage(driver);
+        new YahooMainPage(driver).openMainPage();
 //      Run methods to login
         doLogin(USERNAME, PASSWORD);
 //      Let's check success of the login
