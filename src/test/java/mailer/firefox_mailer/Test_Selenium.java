@@ -4,7 +4,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -30,12 +29,10 @@ public class Test_Selenium {
     private static final String LAST_FIRST_NAME = "Test Selenium";
 
     private WebDriver driver;
-    private WebDriverWait wait;
 
     @BeforeClass(description = "Start browser and setting waiting variable")
     public void startBrowser() {
         driver = new FirefoxDriver();
-        wait = new WebDriverWait(driver, 20);
         driver.manage().deleteAllCookies();
 //      Open browser on full screen
         driver.manage().window().maximize();
