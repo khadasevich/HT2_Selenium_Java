@@ -4,7 +4,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -77,9 +76,8 @@ public class Test_Selenium {
         String subject = text_subject.getAttribute("value");
 //      Checking subject
         Assert.assertEquals(SUBJECT, subject);
-//        Checking of the body of the message
+//      Checking of the body of the message
         WebElement text_body = driver.findElement(By.xpath(TEXTBOX_DESCRIPTION));
-//        String body_message = text_body.getAttribute("value");
         String body_message = text_body.getText();
 //      Checking body
         Assert.assertEquals(DESCRIPTION_TEXT, body_message);
