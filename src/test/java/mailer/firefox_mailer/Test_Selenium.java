@@ -5,7 +5,7 @@ import org.testng.annotations.Test;
 import java.util.concurrent.TimeUnit;
 
 public class Test_Selenium extends TestBase{
-
+// Main runner class
 
     private static final String EMPTY_DRAFT = "Your \"Drafts\" folder is empty\n" +
             "Catch up on the most popular videos on Yahoo";
@@ -26,6 +26,7 @@ public class Test_Selenium extends TestBase{
         String messageText = makeLogin.openProfile();
 //      Checking that first and last name are on the page
         Assert.assertEquals(LAST_FIRST_NAME, messageText);
+        makeLogin.logOut();
     }
 
     @Test (priority = 2, description = "Checks creation of the draft message")
@@ -55,6 +56,7 @@ public class Test_Selenium extends TestBase{
         String body_message = results[1];
 //      Checking body
         Assert.assertEquals(DESCRIPTION_TEXT, body_message);
+        makeLogin.logOut();
     }
 
     @Test (priority = 3, description = "Sends draft and checks sending")
@@ -85,6 +87,7 @@ public class Test_Selenium extends TestBase{
 //      Let's check that sent message is in the sent box and has right email
         String email_path_string = sendDraft.getParamOfSnt();
         Assert.assertEquals(EMAIL, email_path_string);
+        makeLogin.logOut();
     }
 }
 
