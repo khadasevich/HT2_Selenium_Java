@@ -19,6 +19,15 @@ public class SendDraft extends YahooAbstractClass {
     @FindBy (xpath = "//*[@data-test-id='compose-send-button']")
     WebElement sndBtn;
 
+    @FindBy (xpath = "//*[@data-test-folder-name='Sent']")
+    WebElement sntBox;
+
+    @FindBy (xpath = "//*[@title='khadasevich.aleksey@gmail.com']")
+    WebElement sntMsg;
+
+    @FindBy (xpath = "//*[@data-test-id='message-to']")
+    WebElement email;
+
     public SendDraft sendMessage() {
 //  Method which sends draft
 //      Let's go to the Draft
@@ -33,4 +42,24 @@ public class SendDraft extends YahooAbstractClass {
         return this;
     }
 
+    public SendDraft openSntBox() {
+//      Method which opens send Box
+        waitClickability(sntBox);
+        sntBox.click();
+        return this;
+    }
+
+    public SendDraft openSntMsg() {
+//      Method which returns created message
+        waitClickability(sntMsg);
+        sntMsg.click();
+        return this;
+    }
+
+    public String getParamOfSnt() {
+//      Taking email of the sent message
+        openSntMsg();
+        String sentMessage = email.getText();
+        return sentMessage;
+    }
 }
