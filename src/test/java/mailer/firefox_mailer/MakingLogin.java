@@ -34,11 +34,20 @@ public class MakingLogin extends YahooAbstractClass {
     @FindBy (xpath = "//*[text()='Test Selenium']")
     WebElement prfText;
 
+    @FindBy (xpath = "//*[@data-test-id='search-box']")
+    WebElement inptFld;
+
+    @FindBy (xpath = "/html/body/header/div/div[3]/div[1]/div/div/div/a[3]/span")
+    WebElement lgtBtn;
+
     public MakingLogin doLogin() {
 //      Method which makes login and opens inbox of the user
 //      Find the Sign In button and click it
         waitClickability(signinBtn);
         signinBtn.click();
+//      Checking whether new session is using
+        TestingUtilities testUtl = new TestingUtilities(driver);
+        testUtl.closeOldAcc();
 //      Find login field and submit user name
         waitClickability(usernameField);
         usernameField.sendKeys(USERNAME);
@@ -53,12 +62,28 @@ public class MakingLogin extends YahooAbstractClass {
         return this;
     }
 
-    public String openProfile() {
-//  Opens profile ticket fo tests
+    public MakingLogin openProfileCard() {
+//  Opens profile ticket for tests
         waitClickability(prflBtn);
         prflBtn.click();
+        return this;
+    }
+
+    public String openProfile() {
+//      Gets login info
+        openProfileCard();
         String messageText = prfText.getText();
         return messageText;
+    }
+
+    public MakingLogin logOut() {
+//      Makes logout after tests
+        waitClickability(inptFld);
+        inptFld.click();
+        openProfileCard();
+        waitClickability(lgtBtn);
+        lgtBtn.click();
+        return this;
     }
 }
 
