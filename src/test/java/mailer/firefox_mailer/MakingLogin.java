@@ -13,7 +13,7 @@ public class MakingLogin extends YahooAbstractClass {
     private static final String USERNAME = "testselenium42@yahoo.com";
     private static final String PASSWORD = "123456Qww";
 
-    @FindBy (xpath = "//*[@id=\"uh-signin\"]")
+    @FindBy (id = "uh-signin")
     WebElement signinBtn;
 
     @FindBy (id = "login-username")
@@ -27,6 +27,12 @@ public class MakingLogin extends YahooAbstractClass {
 
     @FindBy (id = "uh-mail-link")
     WebElement mailBtn;
+
+    @FindBy (xpath = "//*[@alt='Profile image']")
+    WebElement prflBtn;
+
+    @FindBy (xpath = "//*[text()='Test Selenium']")
+    WebElement prfText;
 
     public MakingLogin doLogin() {
 //      Method which makes login and opens inbox of the user
@@ -45,6 +51,14 @@ public class MakingLogin extends YahooAbstractClass {
         waitClickability(mailBtn);
         mailBtn.click();
         return this;
+    }
+
+    public String openProfile() {
+//  Opens profile ticket fo tests
+        waitClickability(prflBtn);
+        prflBtn.click();
+        String messageText = prfText.getText();
+        return messageText;
     }
 }
 
